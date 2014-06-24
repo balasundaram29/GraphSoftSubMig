@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+ <!DOCTYPE hibernate-mapping PUBLIC
+ "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="SavableObservedValues" table="OBSVALUES">
+        <id name="id" type="int" column="OBID" >
+            <generator class="increment"/>
+        </id>
+        <property name="type">
+            <column name="TYPE" />
+        </property>
+        <property name="sNo">
+            <column name="SNO" />
+        </property>
+        <property name="date">
+            <column name="OBDATE" />
+        </property>
+        <property name="head">
+            <column name="HEAD"/>
+        </property>
+        <property name="disch">
+            <column name="DISCH" />
+        </property>
+        <property name="eff">
+            <column name="EFF"/>
+        </property>
+        <property name="mcurrent">
+            <column name="MCURRENT" />
+        </property>
+    </class>
+</hibernate-mapping>

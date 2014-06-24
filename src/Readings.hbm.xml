@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+ <!DOCTYPE hibernate-mapping PUBLIC
+ "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Readings" table="READINGS">
+        <id name="sNo" type="string" column="SNO" >
+            <generator class="assigned"/>
+        </id>
+        <property name="inPassNo">
+            <column name="INPASSNO"  />
+        </property>
+        <property name="date">
+            <column name="RDATE"  />
+        </property>
+        <property name="isRef">
+            <column name="ISREF"  />
+        </property>
+
+        <property name="remarks">
+            <column name="REMARKS"  />
+        </property>
+
+        <property name="gaugeDistance">
+            <column name="GAUGEDISTANCE"  />
+        </property>
+
+        <property name="dischMax">
+            <column name="DISCHMAX"   />
+        </property>
+
+        <property name="headMax">
+            <column name="HEADMAX"   />
+        </property>
+
+        <property name="effMax">
+            <column name="EFFMAX"   />
+        </property>
+
+        <property name="currMax">
+            <column name="CURRMAX"   />
+        </property>
+
+        <many-to-one name = "declValues"
+          class = "DeclValuesOfReadings"
+          column = "DECLVALUES"
+           cascade = "save-update"
+            not-null ="true"
+           />
+        <one-to-one name = "obsValues"
+          class = "ObsValuesOfReadings"
+          property-ref = "readingSNo"
+          cascade = "all" />
+        <array name="readingRows"  cascade="all" >
+            <key column="parentSNo"/>
+            <index column="idx"/>
+            <one-to-many class="ReadingRow"/>
+        </array>
+    </class>
+    <class name="ReadingRow" table="READINGROWS">
+        <id name="id" type="int">
+            <generator class="increment"/>
+        </id>
+        <property name="cardinalNo"/>
+        <property name="freq"/>
+        <property name="delGaugeReading"/>
+        <property name="disch"/>
+        <property name="volt"/>
+        <property name="curr"/>
+        <property name="watts"/>
+    </class>
+</hibernate-mapping>

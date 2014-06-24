@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+ <!DOCTYPE hibernate-mapping PUBLIC
+ "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="PumpType" table="TYPES">
+        <id name="id" type="int" column="UID" >
+            <generator class="increment"/>
+        </id>
+
+        <property name="type">
+            <column name="TYPE" />
+        </property>
+        <property name="hp">
+            <column name="HP"/>
+        </property>
+        <property name="kW">
+            <column name="KW"/>
+        </property>
+      <property name="delSize">
+            <column name="DELSIZE" />
+        </property>
+      <property name="discharge">
+            <column name="DISCHARGE" />
+        </property>
+        <property name="head">
+            <column name="HEAD"/>
+        </property>
+        <property name="eff">
+            <column name="EFF"/>
+        </property>
+        <property name="current">
+            <column name="MCURRENT" />
+        </property>
+        <property name="lowerHead">
+            <column name="HEADLOWER"/>
+        </property>
+        <property name="upperHead">
+            <column name="HEADUPPER"/>
+        </property>
+        <property name="voltage">
+            <column name="VOLTAGE"/>
+        </property>
+        <property name="phases">
+            <column name="PHASES"/>
+        </property>
+    </class>
+</hibernate-mapping>
