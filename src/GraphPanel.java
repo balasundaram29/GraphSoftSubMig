@@ -42,73 +42,27 @@ public final class GraphPanel extends JPanel implements GraphDrawListener {
      */
 
 
-    public GraphPanel(ReportPanel reportPanel,int w, int h) {
-        this.w = w;
-        this.h = h-35;
+    public GraphPanel(ReportPanel reportPanel) {
+       // this.w = w;
+        //this.h = h-35;
         this.reportPanel = reportPanel;
         makeDrawingPanel();
         makeTableScrollerPanel();
-        //setLayout(null);
         setLayout(new MigLayout("","[grow][]","[grow][]"));
-       // setBounds(0,0,this.w,this.h);
-        // this.setPreferredSize(new Dimension(1024,680));
-       // this.drawingPanel.setBounds(0, 0, this.w, this.h-78);
-
-     //   this.tableScrollerPanel.setBounds(0, this.h-77, this.w, 78);
         setBackground(Color.white);
         add(drawingPanel,"grow,span,wrap");
         add(tScroller,"grow,span,height : :90");
-       // add(tableScrollerPanel);
     }
     //to change the size of the already existing  GraphPanel following constructor is used
-    public GraphPanel(GraphPanel gp,int w, int h) {
-        this.w = w;
-        this.h = h-35;
+    public GraphPanel(GraphPanel gp) {
         this.reportPanel = gp.reportPanel;
         makeDrawingPanel();
         makeTableScrollerPanel();
-       // setLayout(null);
-       // setBounds(0,0,this.w,this.h);
-        // this.setPreferredSize(new Dimension(1024,680));
-       // this.drawingPanel.setBounds(0, 0, this.w, this.h-78);
-
-      //  this.tableScrollerPanel.setBounds(0, this.h-77, this.w, 78);
         setBackground(Color.white);
         add(drawingPanel);
-        //add(tableScrollerPanel);
         add(tScroller);
     }
-     public void paintComponent(Graphics g) {
-         this.w = getWidth();
-        this.h = getHeight()-35;
-      //  this.reportPanel = gp.reportPanel;
-        //makeDrawingPanel();
-        //makeTableScrollerPanel();
-        //setLayout(null);
-        //setBounds(0,0,this.w,this.h);
-        // this.setPreferredSize(new Dimension(1024,680));
-       // this.drawingPanel.setBounds(0, 0, this.w, this.h-78);
-
-       // this.tableScrollerPanel.setBounds(0, this.h-77, this.w, 78);
-        setBackground(Color.white);
-        //add(drawingPanel);
-        //add(tableScrollerPanel);
-     }
-    public void setWAndH(int w, int h){
-         this.w = w;
-        this.h = h-35;
-        setBounds(0,0,this.w,this.h);
-         //remove(drawingPanel);
-       // remove(tableScrollerPanel);
-        
-        this.drawingPanel.setBounds(0, 0, this.w, this.h-78);
-
-        this.tableScrollerPanel.setBounds(0, this.h-77, this.w, 78);
-        tScroller.setBounds(5,0,w-15, 74);
-        setBackground(Color.white);
-        // add(drawingPanel);
-        //add(tableScrollerPanel);
-    }
+   
     
     void makeDrawingPanel() {
         Dataset headDataset = reportPanel.getDataset(DatasetAndCurveType.DISCHARGE_VS_HEAD);
@@ -120,8 +74,6 @@ public final class GraphPanel extends JPanel implements GraphDrawListener {
         myPlot.addGraphDrawListener(this);
         DomainAxis xAxis = myPlot.getDomainAxis();
         xAxis.setDataset(headDataset);
-        //xAxis.setScaleSelectionMode(ScaleSelectionMode.MANUAL);
-        // xAxis.setScale(250);
         xAxis.setAxisLineColor(Color.blue);
         xAxis.setMaxAxisValue(reportPanel.getValuesForScale().getDischMax());
         RangeAxis theFirst = myPlot.getRangeAxis(0);
@@ -165,9 +117,7 @@ public final class GraphPanel extends JPanel implements GraphDrawListener {
 
     private void makeTableScrollerPanel() {
         tableScrollerPanel = new JPanel();
-     //  tableScrollerPanel.setLayout(null);
        tableScrollerPanel.setBackground(Color.white);
-         
         model = new DefaultTableModel();
         table = new JTable(model);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -200,11 +150,9 @@ public final class GraphPanel extends JPanel implements GraphDrawListener {
         model.addRow(rowData1);
         model.addRow(rowData2);
         model.addRow(rowData3);
-        //table.setBorder(BorderFactory.createLineBorder(Color.black));
         setTableCellAlignment(JLabel.LEFT, table);
         tScroller = new JScrollPane(table);
-      // tScroller.setBorder(BorderFactory.createLineBorder(Color.black));
-       // tScroller.setBounds(5,0,w-15, 74);
+        table.setPreferredScrollableViewportSize(new Dimension(getWidth(),table.getRowCount()*table.getRowHeight()));
        tableScrollerPanel.add(tScroller);
     }
 private void setTableCellAlignment(int alignment, JTable table) {

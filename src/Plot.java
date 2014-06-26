@@ -19,7 +19,11 @@ public class Plot {
     private ArrayList<GraphDrawListener> listenerList = new ArrayList<GraphDrawListener>();
     private int DEFAULT_BORDER_SPACING = 10;
     private GridLinesType DEFAULT_GRID_LINES_TYPE = GridLinesType.WIDE_GRID_SPACING;
-    private int MARGIN = 40;
+    private int LEFT_MARGIN = 20;
+    private int RIGHT_MARGIN = 0;
+    private int TOP_MARGIN = 0;
+    private int BOTTOM_MARGIN = 15;
+    private int GAP_BETWEEN_RANGE_AXES=20;
     DomainAxis domainAxis;
     private int rangeAxisIndex = 0;
     private HeadValuesExtractor headExtractor;
@@ -104,14 +108,15 @@ public class Plot {
     public Rectangle2D drawAxesAndGetDataArea(Graphics2D gc, Rectangle2D plotArea) {
 
         double bottomLeft = plotArea.getMaxX();
-        double yBottom = plotArea.getMaxY() - getMARGIN();
-        double yTop = plotArea.getMinY() + 2.0 * getMARGIN();
-        double xLeft = plotArea.getMinX();
-        double xRight = plotArea.getMaxX() - 40;
+        double yBottom = plotArea.getMaxY() -BOTTOM_MARGIN;
+        double yTop = plotArea.getMinY() +  TOP_MARGIN;
+        double xLeft = plotArea.getMinX()+LEFT_MARGIN;
+        double xRight = plotArea.getMaxX() - RIGHT_MARGIN;
         for (RangeAxis rangeAxis : rangeAxesList) {
             if (rangeAxis.axisPosition == AxisPosition.LEFT) {
-                xLeft = xLeft + getMARGIN();
+                
                 rangeAxis.setX(xLeft);
+                xLeft = xLeft + GAP_BETWEEN_RANGE_AXES;
                 rangeAxis.setYTop(yTop);
                 rangeAxis.setYBottom(yBottom);
             } else {
@@ -123,6 +128,7 @@ public class Plot {
             rangeAxis.drawAxis(gc);
         }
         domainAxis.setY(yBottom);
+        xLeft=xLeft-GAP_BETWEEN_RANGE_AXES;
         domainAxis.setXLeft(xLeft);
         domainAxis.setXRight(xRight);
         Rectangle2D dataArea = new Rectangle2D.Double(xLeft, yTop, xRight - xLeft, yBottom - yTop);
@@ -205,14 +211,14 @@ public class Plot {
      * @return the MARGIN
      */
     public int getMARGIN() {
-        return MARGIN;
+        return 0;//MARGIN;
     }
 
     /**
      * @param MARGIN the MARGIN to set
      */
     public void setMARGIN(int MARGIN) {
-        this.MARGIN = MARGIN;
+       // this.MARGIN = MARGIN;
     }
 
     /**

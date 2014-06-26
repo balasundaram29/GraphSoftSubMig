@@ -53,7 +53,7 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
 
     private ReadingEntryPanel entryPanel;
     private GraphPanel graphPanel;
-    private final int w, h;
+   // private final int w, h;
     private File openFile;
     private String baseTitle = " Annai : Graph Software - Openwell Submersible Pumpsets";
     private JToolBar toolBar;
@@ -89,11 +89,10 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
     final JSlider smooth = new JSlider(0, 100, 0);
     final JSlider rough = new JSlider(0, 50, 0);
 
-    public OpeningFrame(int w, int h) {
-        this.w = w;
-        this.h = h;
-      //  setSize(w, h);
-        // setLayout(null);
+   
+    
+    public OpeningFrame() 
+    {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle(baseTitle);
         this.entryPanel = new ReadingEntryPanel();
@@ -315,7 +314,7 @@ toolBar = new JToolBar();
 
     public static void main(String[] args) {
 
-        final OpeningFrame opFrame = new OpeningFrame(1024, 720);
+        final OpeningFrame opFrame = new OpeningFrame();
 
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -561,7 +560,7 @@ toolBar = new JToolBar();
             java.awt.EventQueue.invokeLater(new Runnable() {
 
                 public void run() {
-                    OpeningFrame opFrame = new OpeningFrame(1024, 720);
+                    OpeningFrame opFrame = new OpeningFrame();
                     Rectangle2D bounds = OpeningFrame.this.getBounds();
                     opFrame.setBounds((int) bounds.getMinX() + 50, (int) bounds.getMinY() + 50, (int) bounds.getWidth(), (int) bounds.getHeight());
                     opFrame.go();
@@ -664,7 +663,7 @@ toolBar = new JToolBar();
 
         public void actionPerformed(ActionEvent ae) {
             try {
-                ReportPanel rp = new ReportPanel(entryPanel, w, h);
+                ReportPanel rp = new ReportPanel(entryPanel);
                 getContentPane().removeAll();
                 getContentPane().invalidate();
                 add(toolBar, BorderLayout.PAGE_START);
@@ -705,15 +704,20 @@ toolBar = new JToolBar();
 
         public void actionPerformed(ActionEvent ae) {
 
+try {
 
-            ReportPanel rp = new ReportPanel(entryPanel, w, h);
-            rp.generateExcelReport(graphPanel);
+                new ModifiedPrintUtility(entryPanel, ComponentToBePrintedType.REPORT).print();
+            } catch (Exception ex) {
+            }
+        }
+         //   ReportPanel rp = new ReportPanel(entryPanel, w, h);
+           // rp.generateExcelReport(graphPanel);
 
 
 
 
         }
-    }
+    
 
     class ViewGraphAction extends AbstractAction {
 
@@ -724,7 +728,7 @@ toolBar = new JToolBar();
 
         public void actionPerformed(ActionEvent ae) {
             try {
-                graphPanel = new GraphPanel(new ReportPanel(entryPanel, w, h), w, h - 25);
+                graphPanel = new GraphPanel(new ReportPanel(entryPanel));
                 getContentPane().removeAll();
                 getContentPane().invalidate();
                 //add(graphPanel);

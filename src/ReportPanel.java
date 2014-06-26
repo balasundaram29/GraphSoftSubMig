@@ -48,65 +48,61 @@ import net.miginfocom.swing.MigLayout;
 public final class ReportPanel extends JPanel {
 
     private ReadingEntryPanel entryPanel;
-    private final int w;
-    private final int h;
     int reportTableHeight;
     double[] multFactors;
-    // private JTable entryTable;
 
-    public ReportPanel(ReadingEntryPanel entryPanel, int w, int h) {
+    public ReportPanel(ReadingEntryPanel entryPanel) {
         this.entryPanel = entryPanel;
-        this.w = w;
-        this.h = h - 25;
         go();
     }
 
     void go() {
-//        try {
-
-
         double[][] given = parseEntryTable();
         multFactors = calculateMultFactors();
         double[][] data = this.findReportValues(given);
-          setLayout(new MigLayout("",
-          "[grow][grow][grow][grow]","[][]20[]20[]20[]20[]20[]20[]50[]"));
-         //.addTitle();
-         this.addDeclaredValuesPanel();
+        setLayout(new MigLayout("",
+                "[grow][grow][grow][grow]", "[][]20[]20[]20[]20[]20[]20[]50[]"));
+        this.addDeclaredValues();
         this.getAndAddTable(data);
-
         this.addSignature();
-      
-      
-      //  setBounds(0, 0, w, h);
-       // this.setPreferredSize(new Dimension(1024,640));
-        //getParent().validate();
-  /*      } catch (Exception ex) {
-        showErrorMessage();
-        ex.printStackTrace();
-        return;
-        }*/
+    }
+
+    public ReportPanel(ReadingEntryPanel entryPanel, boolean everythingInAPage) {
+        this.entryPanel = entryPanel;
+        double[][] given = parseEntryTable();
+        multFactors = calculateMultFactors();
+        double[][] data = this.findReportValues(given);
+        setLayout(new MigLayout("",
+                "[grow][grow][grow][grow]", "[][][][][][][][grow][]20[]20"));
+        this.addDeclaredValues();
+        this.getAndAddTable(data);
+        this.add(new GraphPanel(this), "grow,span");
+        this.addSignature();
     }
 
     public int findRowCount() {
-       
-JTable entryTable = getEntryPanel().getTable();
+
+        JTable entryTable = getEntryPanel().getTable();
         int i = 0;
         for (i = 0; i < 8; i++) {
-             String str=null;
-            try{
-           str = (entryTable.getValueAt(i, 1)).toString();
-            if (str.trim().length() == 0) {
+            String str = null;
+            try {
+                str = (entryTable.getValueAt(i, 1)).toString();
+                if (str.trim().length() == 0) {
+                    break;
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 break;
             }
-            
-            }catch(Exception ex){ex.printStackTrace();break;}
 
-      }  //System.out.println("Row count is " + i);
+        }  //System.out.println("Row count is " + i);
         return i;
-    
+
     }
+
     public double[][] parseEntryTable() {
-        //  try {
         int rows = findRowCount();
         int cols = 7;
         JTable entryTable = entryPanel.getTable();
@@ -118,10 +114,6 @@ JTable entryTable = getEntryPanel().getTable();
             }
         }
         return given;
-        //  } catch (Exception ex) {
-        //    ex.printStackTrace();
-        //  return null;
-        // }
     }
 
     public double[] calculateMultFactors() {
@@ -140,22 +132,13 @@ JTable entryTable = getEntryPanel().getTable();
 
         int cols = 15;
         double diaDel = Double.parseDouble(entryPanel.getDelSizeField().getText());
-        //   double diaSuction = Double.parseDouble(entryPanel.getSuctionSizeField().getText());
-
-
         double pipeConstant = 4000.0 * 4000.0 / (Math.PI * Math.PI * diaDel * diaDel * diaDel * diaDel * 2.0 * 9.81);
-        // double pipeConstantSuction = 4000.0 * 4000.0 / (Math.PI * Math.PI * diaSuction * diaSuction * diaSuction
-        //       * diaSuction * 2.0 * 9.81);
-        //double pipeConstant = pipeConstantDel - pipeConstantSuction;
-        // System.out.println("Pipe constant for mm diameter  is" + pipeConstant);
         double data[][] = new double[rows][cols];
         for (int i = 0; i < rows; i++) {
             double rater = 50.0 / given[i][EntryTableConstants.FREQ_COL_INDEX];
             data[i][ReportTableConstants.SLNO_COL_INDEX] = i + 1;
             data[i][ReportTableConstants.FREQ_COL_INDEX] = given[i][EntryTableConstants.FREQ_COL_INDEX]
                     * multFactors[EntryTableConstants.FREQ_COL_INDEX];
-            //   data[i][ReportTableConstants.SGR_COL_INDEX] = given[i][EntryTableConstants.SGR_COL_INDEX]
-            //          * multFactors[EntryTableConstants.SGR_COL_INDEX] * 0.0135;
             data[i][ReportTableConstants.DGR_COL_INDEX] = given[i][EntryTableConstants.DGR_COL_INDEX]
                     * multFactors[EntryTableConstants.DGR_COL_INDEX];
             double disch = given[i][EntryTableConstants.DISCH_COL_INDEX] * multFactors[EntryTableConstants.DISCH_COL_INDEX];
@@ -181,12 +164,6 @@ JTable entryTable = getEntryPanel().getTable();
 
         }
         return data;
-        // } catch (Exception ex) {
-        //  ex.printStackTrace();
-        //   showErrorMessage();
-        // return null;
-        //}
-
     }
 
     public void addTitle() {
@@ -200,20 +177,15 @@ JTable entryTable = getEntryPanel().getTable();
                 g2D.drawString("Test Report of Openwell Submersible Pumpset, IS 14220", 2, 45);
             }
         };
-
-      //  titlePanel.setBounds(0, 25, w, 75);
-       titlePanel.setMaximumSize(new Dimension(w,75));
-        add(titlePanel,"grow,wrap,span");
+        add(titlePanel, "grow,wrap,span");
     }
 
     public void getAndAddTable(double[][] data) {
-
 
         Object[] columnNames = {"Sl.No", "Freq", "<HTML>Del.Gauge<BR>Reading", "VHC", "<HTML>Total<BR>Head</HTML>",
             "Disch", "Voltage", "Current", "<HTML>Motor<BR>Input",
             "<HTML>Rated<BR>Disch<HTML>", "<HTML>Rated<BR>Head</HTML>", "<HTML>Rated<BR>Input</HTML>", "<HTML>Rated<BR>Output</HTML>",
             "<HTML>Overall<BR>Eff.</HTML>"};
-        //First Row is for units.So the total number of rows is result of findRowCount + 2;(findrowCounts is zero based);
         Object[][] dataObj = new Object[this.findRowCount() + 1][15];
         dataObj[0] = new Object[]{"", "Hz", "m", "m", "m", "lps", "V", "A", "kW", "lps", "m", "kW", "kW", "%"};
         for (int i = 1; i < findRowCount() + 1; i++) {
@@ -232,21 +204,15 @@ JTable entryTable = getEntryPanel().getTable();
         reportTable.setBackground(Color.white);
         reportTable.setRowHeight(17);
         reportTable.setRowMargin(3);
-        //reportTableHeight = 40 + (this.findRowCount()) * 20;
         reportTable.getTableHeader().setPreferredSize(new Dimension(reportTable.getColumnModel().getTotalColumnWidth(), 40));
         reportTable.getTableHeader().setFont(new Font("SansSerif", Font.PLAIN, 8));
         reportTable.getTableHeader().setBackground(Color.white);
         reportTable.setFont(new Font("SansSerif", Font.PLAIN, 8));
-      //  reportTable.setBorder(BorderFactory.createLineBorder(Color.black));
         JScrollPane tScroller = new JScrollPane(reportTable);
-reportTable.setFillsViewportHeight(true);
-reportTable.setPreferredScrollableViewportSize(new Dimension(getWidth(),//reportTable.getHeight()+
-        reportTable.getRowCount()*(reportTable.getRowHeight())));
-//reportTable.setPreferredScrollableViewportSize(new Dimension(getWidth(),3*reportTable.getRowHeight()));
-        //  tScroller.setBounds(5, 270, w - 10, reportTableHeight);//trial and error
-        //tScroller.setBorder(BorderFactory.createLineBorder(Color.black));
-       // tScroller.setMaximumSize(new Dimension(getWidth(),reportTableHeight));       
-add(tScroller,"grow,span,wrap");
+        reportTable.setFillsViewportHeight(true);
+        reportTable.setPreferredScrollableViewportSize(new Dimension(getWidth(),//reportTable.getHeight()+
+                reportTable.getRowCount() * (reportTable.getRowHeight())));
+        add(tScroller, "grow,span,wrap");
     }
 
     public void generateExcelReport(GraphPanel gp) {
@@ -296,9 +262,6 @@ add(tScroller,"grow,span,wrap");
             lbl.setCellFormat(wcf);
             sheet.addCell(lbl);
 
-
-
-
             double[][] given = parseEntryTable();
             double[][] data = this.findReportValues(given);
 
@@ -344,7 +307,7 @@ add(tScroller,"grow,span,wrap");
                 }
             }
             //final GraphPanel
-                    gp = new GraphPanel(new ReportPanel(entryPanel, 1024,768),1024,800 );
+            gp = new GraphPanel(new ReportPanel(entryPanel));
 
             ArrayList<Renderer> rendererList = gp.getGraph().getPlot().getRendererList();
             for (Renderer renderer : rendererList) {
@@ -369,7 +332,6 @@ add(tScroller,"grow,span,wrap");
             p.setcExrStroke(s);
             p.setcExrColor(Color.BLACK);
 
-
             gp.getGraph().getPlot().getDomainAxis().setAxisLineColor(Color.black);
             // Font old = gp.getGraph().getPlot().getDomainAxis().getFont();
 
@@ -377,18 +339,15 @@ add(tScroller,"grow,span,wrap");
             //gp.getGraph().getPlot().
 
             BufferedImage image = new BufferedImage(
-                    1024 - 8, 768- 120, BufferedImage.TYPE_INT_RGB);
+                    1024 - 8, 768 - 120, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2D = (Graphics2D) image.getGraphics();
             g2D.scale(1.0, 1);
-
 
             gp.paint(g2D);
             File file = null;
             try {
                 file = new File("GraphOut.png");
                 ImageIO.write(image, "png", file);
-
-
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -452,7 +411,6 @@ add(tScroller,"grow,span,wrap");
             wcf.setBorder(Border.RIGHT, BorderLineStyle.THIN);
             lbl.setCellFormat(wcf);
             sheet.addCell(lbl);
-
 
             lbl = new Label(10, 47, String.format("%.2f", obs.getDischarge()));
             wcf = new WritableCellFormat(times);//wcf = new WritableCellFormat(lbl.getCellFormat());
@@ -597,176 +555,134 @@ add(tScroller,"grow,span,wrap");
         return entryPanel;
     }
 
-    private void addDeclaredValuesPanel() {
-      //  JPanel valuesPanel = new JPanel();
-      //  this.setBounds(0, 75, w, 180);
-       // add(valuesPanel);
+    private void addDeclaredValues() {
         this.setBackground(Color.white);
-       // this.setLayout(new GridLayout(4, 6));
-       // this.setLayout(new MigLayout("","[grow]20[grow]60[grow]20[grow]60[grow]20[grow]",
-            //    "[]20[]25[]25[]25[]25[]25[]25"));
-        //JLabel title1 = new JLabel("Annai   Engg   ");
-        //this.add(title1);
-        //JLabel title2 = new JLabel("  Company");
-        //this.add(title2);
-        Font lFont=new Font("SansSerif", Font.PLAIN, 18);
-         JLabel compLabel=new JLabel("Annai Engineering Company,Coimbatore");
-         compLabel.setFont(lFont);
-         this.add(compLabel,"grow,wrap,span");
-         lFont=new Font("SansSerif", Font.BOLD, 12);
-           compLabel=new JLabel("Test Report of Openwell Submersible Pumpset, IS 14220");// 2, 45); 
-            compLabel.setFont(lFont); 
-            this.add(compLabel,"grow,wrap,span");
-           Font labelFont = new Font("SansSerif", Font.PLAIN, 8);
+        Font lFont = new Font("SansSerif", Font.PLAIN, 18);
+        JLabel compLabel = new JLabel("Annai Engineering Company,Coimbatore");
+        compLabel.setFont(lFont);
+        this.add(compLabel, "grow,wrap,span");
+        lFont = new Font("SansSerif", Font.BOLD, 12);
+        compLabel = new JLabel("Test Report of Openwell Submersible Pumpset, IS 14220");// 2, 45); 
+        compLabel.setFont(lFont);
+        this.add(compLabel, "grow,wrap,span");
+        Font labelFont = new Font("SansSerif", Font.PLAIN, 8);
         JLabel slNoLabel = new JLabel("Sl. No : ");
         slNoLabel.setFont(labelFont);
-        this.add(slNoLabel,"grow");
+        this.add(slNoLabel, "grow");
         JLabel enteredSlNoLabel = new JLabel(entryPanel.getSlNoField().getText());
         enteredSlNoLabel.setFont(labelFont);
-        this.add(enteredSlNoLabel,"grow");
+        this.add(enteredSlNoLabel, "grow");
 
         JLabel ipNoLabel = new JLabel("InPass No. : ");
-        this.add(ipNoLabel,"grow");
+        this.add(ipNoLabel, "grow");
         ipNoLabel.setFont(labelFont);
         JLabel enteredIpNoLabel = new JLabel(entryPanel.getIpNoField().getText());
-        this.add(enteredIpNoLabel,"grow");
+        this.add(enteredIpNoLabel, "grow");
         enteredIpNoLabel.setFont(labelFont);
         JLabel dateLabel = new JLabel("Date : ");
-        this.add(dateLabel,"grow");
+        this.add(dateLabel, "grow");
         dateLabel.setFont(labelFont);
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String dateString = formatter.format(entryPanel.getDateChooser().getDate());
         JLabel enteredDateLabel = new JLabel(dateString);
 
-
-        this.add(enteredDateLabel,"grow");
+        this.add(enteredDateLabel, "grow");
         enteredDateLabel.setFont(labelFont);
 
-
         JLabel typeLabel = new JLabel("Pump Type : ");
-        this.add(typeLabel,"grow");
+        this.add(typeLabel, "grow");
         typeLabel.setFont(labelFont);
         JLabel enteredTypeLabel = new JLabel(entryPanel.getPumpTypeField().getText());
-        this.add(enteredTypeLabel,"grow,wrap");
+        this.add(enteredTypeLabel, "grow,wrap");
         enteredTypeLabel.setFont(labelFont);
         JLabel ratingLabel = new JLabel("Rating (kW/HP)     :");
-        this.add(ratingLabel,"grow");
+        this.add(ratingLabel, "grow");
         ratingLabel.setFont(labelFont);
-        
-        
-        
+
         JLabel enteredRatingLabel = new JLabel(entryPanel.getRatingField().getText());
-        this.add(enteredRatingLabel,"grow");
+        this.add(enteredRatingLabel, "grow");
         enteredRatingLabel.setFont(labelFont);
-        
-        
-        
-        
-        
+
         JLabel headLabel = new JLabel("Total Head(m) : ");
-        this.add(headLabel,"grow");
+        this.add(headLabel, "grow");
         headLabel.setFont(labelFont);
         JLabel enteredHeadLabel = new JLabel(entryPanel.getHeadField().getText());
-        this.add(enteredHeadLabel,"grow");
+        this.add(enteredHeadLabel, "grow");
         enteredHeadLabel.setFont(labelFont);
         JLabel dischLabel = new JLabel("Discharge (lps) : ");
-        this.add(dischLabel,"grow");
+        this.add(dischLabel, "grow");
         dischLabel.setFont(labelFont);
         JLabel enteredDischLabel = new JLabel(entryPanel.getDischField().getText());
-        this.add(enteredDischLabel,"grow");
+        this.add(enteredDischLabel, "grow");
         enteredDischLabel.setFont(labelFont);
 
         JLabel effLabel = new JLabel("Overall Eff.(%) : ");
-        this.add(effLabel,"grow");
+        this.add(effLabel, "grow");
         effLabel.setFont(labelFont);
         JLabel enteredEffLabel = new JLabel(entryPanel.getEffField().getText());
-        this.add(enteredEffLabel,"grow,wrap");
+        this.add(enteredEffLabel, "grow,wrap");
         enteredEffLabel.setFont(labelFont);
         JLabel currLabel = new JLabel("Max.Current (A) : ");
-        this.add(currLabel,"grow");
+        this.add(currLabel, "grow");
         currLabel.setFont(labelFont);
         JLabel enteredCurrLabel = new JLabel(entryPanel.getCurrField().getText());
-        this.add(enteredCurrLabel,"grow");
+        this.add(enteredCurrLabel, "grow");
         enteredCurrLabel.setFont(labelFont);
         JLabel headRangeLabel = new JLabel("Head Range (m) : ");
-        this.add(headRangeLabel,"grow");
+        this.add(headRangeLabel, "grow");
         headRangeLabel.setFont(labelFont);
         JLabel enteredHeadRangeLabel = new JLabel(entryPanel.gethRangeLwrField().getText() + " / " + entryPanel.gethRangeUprField().getText());
-        this.add(enteredHeadRangeLabel,"grow");
+        this.add(enteredHeadRangeLabel, "grow");
         enteredHeadRangeLabel.setFont(labelFont);
         JLabel voltLabel = new JLabel("Voltage (V) : ");
-        this.add(voltLabel,"grow");
+        this.add(voltLabel, "grow");
         voltLabel.setFont(labelFont);
         JLabel enteredVoltLabel = new JLabel(entryPanel.getVoltField().getText());
-        this.add(enteredVoltLabel,"grow");
+        this.add(enteredVoltLabel, "grow");
         enteredVoltLabel.setFont(labelFont);
         JLabel phaseLabel = new JLabel("Phase  : ");
-        this.add(phaseLabel,"grow");
+        this.add(phaseLabel, "grow");
         phaseLabel.setFont(labelFont);
         JLabel enteredPhaseLabel = new JLabel(entryPanel.getPhaseField().getText());
-        this.add(enteredPhaseLabel,"grow,wrap");
+        this.add(enteredPhaseLabel, "grow,wrap");
         enteredPhaseLabel.setFont(labelFont);
         JLabel freqLabel = new JLabel("Frequency (Hz) : ");
-        this.add(freqLabel,"grow");
+        this.add(freqLabel, "grow");
         freqLabel.setFont(labelFont);
         JLabel enteredFreqLabel = new JLabel(entryPanel.getFreqField().getText());
-        this.add(enteredFreqLabel,"grow");
+        this.add(enteredFreqLabel, "grow");
         enteredFreqLabel.setFont(labelFont);
-        // JLabel suctionSizeLabel = new JLabel("Suction Size(mm)  : ");
-        //   this.add(suctionSizeLabel);
-        //  suctionSizeLabel.setFont(labelFont);
-//        JLabel enteredSuctionSizeLabel = new JLabel(entryPanel.getSuctionSizeField().getText());
-        //       this.add(enteredSuctionSizeLabel);
-        //     enteredSuctionSizeLabel.setFont(labelFont);
-
-
-
-
         JLabel delSizeLabel = new JLabel("Del. Size(mm)  : ");
-        this.add(delSizeLabel,"grow");
+        this.add(delSizeLabel, "grow");
         delSizeLabel.setFont(labelFont);
         JLabel enteredDelSizeLabel = new JLabel(entryPanel.getDelSizeField().getText());
-        this.add(enteredDelSizeLabel,"grow");
+        this.add(enteredDelSizeLabel, "grow");
         enteredDelSizeLabel.setFont(labelFont);
         JLabel gDistLabel = new JLabel("Gauge Distance (m) : ");
-        this.add(gDistLabel,"grow");
+        this.add(gDistLabel, "grow");
         gDistLabel.setFont(labelFont);
         JLabel enteredGDistLabel = new JLabel(entryPanel.getGaugDistField().getText());
-        this.add(enteredGDistLabel,"grow");
+        this.add(enteredGDistLabel, "grow");
         enteredGDistLabel.setFont(labelFont);
         JLabel remarksLabel = new JLabel("Remarks : ");
-        this.add(remarksLabel,"grow");
+        this.add(remarksLabel, "grow");
         remarksLabel.setFont(labelFont);
         JLabel enteredRemarksLabel = new JLabel(entryPanel.getRemarksField().getText());
-        this.add(enteredRemarksLabel,"grow,wrap");
+        this.add(enteredRemarksLabel, "grow,wrap");
         enteredRemarksLabel.setFont(labelFont);
-  //add(valuesPanel,"span,wrap,grow");
     }
 
     public void addSignature() {
-        //SignPanel signPanel = new SignPanel();
-  Font lFont=new Font("SansSerif", Font.PLAIN, 8);
-         JLabel compLabel=new JLabel("Casing Pressure Test : Casing withstood 1.5 times the max. discharge pressure for 2 mins.");
-         compLabel.setFont(lFont);
-         add(compLabel,"grow,wrap,span");
-         lFont=new Font("SansSerif", Font.BOLD, 8);
-           compLabel=new JLabel("Signature");// 2, 45); 
-            compLabel.setFont(lFont); 
-            add(compLabel,"grow,wrap,span");
-          // Font labelFont = new Font("SansSerif", Font.PLAIN, 8);
-       // signPanel.setBounds(0, h - 80, w, 80);
-        //add(signPanel);
+        Font lFont = new Font("SansSerif", Font.PLAIN, 8);
+        JLabel compLabel = new JLabel("Casing Pressure Test : Casing withstood 1.5 times the max. discharge pressure for 2 mins.");
+        compLabel.setFont(lFont);
+        add(compLabel, "grow,wrap,span");
+        lFont = new Font("SansSerif", Font.BOLD, 8);
+        compLabel = new JLabel("Signature");// 2, 45); 
+        compLabel.setFont(lFont);
+        add(compLabel, "grow,wrap,span");
     }
 
-    class SignPanel extends JPanel {
-
-        public void paintComponent(Graphics g) {
-            Graphics2D g2D = (Graphics2D) g;
-            g2D.setFont(new Font("SansSerif", Font.PLAIN, 8));
-            g2D.drawString("Casing Pressure Test : Casing withstood 1.5 times the max. discharge pressure for 2 mins.", 2, 10);
-            g2D.drawString("Signature ", 2, 80);
-        }
-    }
 
     public static void showErrorMessage() {
         JFrame f = new JFrame();

@@ -33,7 +33,8 @@ public int print(Graphics g, PageFormat pageFormat, int pageIndex){
       double prnHeight= pageFormat.getImageableHeight();
       int pW = (int)prnWidth;
       int pH = (int)prnHeight;
-      GraphPanel componentToBePrinted = new GraphPanel(new ReportPanel(entryPanel,pW,pH),pW,pH);
+      GraphPanel componentToBePrinted = new GraphPanel(new ReportPanel(entryPanel));
+      
       disableDoubleBuffering(componentToBePrinted);
       componentToBePrinted.paint(g2d);
       enableDoubleBuffering(componentToBePrinted);

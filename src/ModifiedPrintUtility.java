@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -116,9 +117,9 @@ public class ModifiedPrintUtility implements Printable {
 
 
         JFrame f = new JFrame("Print Preview");
-
+f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         f.setSize(paperWidth, paperHeight + 8);
-        f.setLayout(null);
+       // f.setLayout(null);
         f.setBackground(Color.white);
         if (type == ComponentToBePrintedType.GRAPH) {
             // GraphPanel gPanel = new GraphPanel(new ReportPanel(entryPanel, prnW, prnH), prnW, prnH);
@@ -128,7 +129,8 @@ public class ModifiedPrintUtility implements Printable {
             //gPanel.getGraph().getPlot().setGridLinesType(gridType);
 
             //change size for printing
-            gPanel.setWAndH(prnW, prnH);
+            gPanel.setSize(prnW,prnH);
+           // gPanel.setWAndH(prnW, prnH);
             for (Renderer renderer : gPanel.getGraph().getPlot().getRendererList()) {
                 // ((LoessSmoothRenderer) renderer).getLoessFunction().setBandwidth(entryPanel.getDesiredSmoothnessPercentage());
                 renderer.setCurvePaint(Color.black);
@@ -151,7 +153,7 @@ public class ModifiedPrintUtility implements Printable {
             f.getContentPane().getGraphics().clipRect(imX + 100, imY + 50, prnW, prnH);
             componentToBePrinted = gPanel;
         } else {
-            ReportPanel rPanel = new ReportPanel(entryPanel, prnW, prnH);
+            ReportPanel rPanel = new ReportPanel(entryPanel,true);
             rPanel.setBounds(imX, imY, prnW, prnH);
             rPanel.setBackground(Color.white);
             f.getContentPane().setBackground(Color.white);
@@ -170,7 +172,8 @@ public class ModifiedPrintUtility implements Printable {
         }
         f.dispose();
         //restore graphPanel to original size
-        gPanel.setWAndH(originalW, originalH);
+    //    gPanel.setWAndH(originalW, originalH);
+        gPanel.setSize(originalW,originalH);
         gPanel.setBounds(rect);
        //the graph pnel has been removed from original OpeningFrame object when attaching to printable Frame.
         //Now we can restore it 
