@@ -19,7 +19,7 @@ public class Plot {
     private ArrayList<GraphDrawListener> listenerList = new ArrayList<GraphDrawListener>();
     private int DEFAULT_BORDER_SPACING = 10;
     private GridLinesType DEFAULT_GRID_LINES_TYPE = GridLinesType.WIDE_GRID_SPACING;
-    private int LEFT_MARGIN = 20;
+    private int LEFT_MARGIN = 15;
     private int RIGHT_MARGIN = 0;
     private int TOP_MARGIN = 0;
     private int BOTTOM_MARGIN = 15;

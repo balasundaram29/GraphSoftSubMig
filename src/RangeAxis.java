@@ -5,8 +5,8 @@ import java.awt.geom.*;
 
 /**
  * Write a description of class RangeAxis here.
- * 
- * @author (your name) 
+ *
+ * @author (your name)
  * @version (a version number or a date)
  */
 public class RangeAxis extends Axis {
@@ -20,7 +20,7 @@ public class RangeAxis extends Axis {
     private ScaleSelectionMode DEFAULT_SCALE_MODE = ScaleSelectionMode.CALCULATE_FROM_DATASET;
     private Paint axisLinePaint;
     private Font font;
-    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 10);
+    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 5);
     private Stroke stroke;
     private Stroke DEFAULT_AXIS_LINE_STROKE = new BasicStroke(1.5f);
     private double maxAxisValue;
@@ -95,7 +95,7 @@ public class RangeAxis extends Axis {
         Polygon poly = new Polygon(new int[]{(int) x - 3, (int) x + 3, (int) x}, new int[]{(int) getyTop() - 60, (int) getyTop() - 60, (int) getyTop() - 20 - 60}, 3);
         g2D.drawPolygon(poly);
         AffineTransform at = new AffineTransform();
-        at.setToRotation(-Math.PI / 2);
+        // at.setToRotation(-Math.PI / 2);
         Font theFont = g2D.getFont();
         Font derivedFont = theFont.deriveFont(at);
         FontMetrics fm = g2D.getFontMetrics();
@@ -106,35 +106,37 @@ public class RangeAxis extends Axis {
         switch (this.getDataset().getType()) {
 
             case DISCHARGE_VS_CURRENT:
-                int offset1 = fm.stringWidth("Current,A");
-                g2D.drawString("Current,A", (int) x, (int) getyTop() - 60 + offset1);
+                int offset1 = fm.stringWidth("I");
+                g2D.drawString("I", (int) x - 6, (int) getyTop() + 5);
                 Ellipse2D circle = new Ellipse2D.Double(-3.0, -3.0, 6, 6);
-                g2D.draw(ShapeUtilities.createTranslatedShape(circle, (int) x - 15, (int) getyTop() - offset1 + 25));
-                Shape CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 15, (int) getyTop() - offset1 + 25);
+                g2D.draw(ShapeUtilities.createTranslatedShape(circle, (int) x - 6, (int) getyTop() + 10));
+                Shape CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 6, (int) getyTop() + 10);
                 g2D.fill(CircleAtPlace);
+                g2D.drawString("A", (int) x - 6, (int) getyTop() + 20);
                 break;
 
             case DISCHARGE_VS_EFFICIENCY:
-                offset1 = fm.stringWidth("Overall");
-                g2D.drawString("Overall", (int) x - 2, (int) getyTop() - 60 + offset1);
-                offset1 = fm.stringWidth("Eff. ,%");
-                g2D.drawString("Eff. ,%", (int) x + fm.getHeight(), (int) getyTop() - 60 + offset1);
+                offset1 = fm.stringWidth("OAE");
+                g2D.drawString("OAE", (int) x - 10, (int) getyTop() + 5);
+                // offset1 = fm.stringWidth("Eff. ,%");
+                //g2D.drawString("Eff. ,%", (int) x + fm.getHeight(), (int) getyTop() - 60 + offset1);
                 Rectangle2D rectangle = new Rectangle2D.Double(-3.0, -3.0, 6.0, 6.0);
-                g2D.draw(ShapeUtilities.createTranslatedShape(rectangle, (int) x - 12, (int) getyTop() - 50 + offset1));
-                CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 12, (int) getyTop() - 50 + offset1);
+                g2D.draw(ShapeUtilities.createTranslatedShape(rectangle, (int) x - 7, (int) getyTop() + 10));
+                CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 7, (int) getyTop() + 10);
                 g2D.fill(CircleAtPlace);
+                g2D.drawString("%", (int) x - 8, (int) getyTop() + 20);
 
                 break;
             case DISCHARGE_VS_HEAD:
-                offset1 = fm.stringWidth("Total");
-                g2D.drawString("Total", (int) x - 2, (int) getyTop() - 60 + offset1);
-                offset1 = fm.stringWidth("Head,m");
-                g2D.drawString("Head,mWC", (int) x + fm.getHeight(), (int) getyTop() - 50 + offset1);
+                //  offset1 = fm.stringWidth("Total");
+                g2D.drawString("TH", (int) x - 11, (int) getyTop() + 5);
+               // offset1 = fm.stringWidth("Head,m");
+                //    g2D.drawString("TH", (int) x + fm.getHeight(), (int) getyTop() - 50 + offset1);
                 Shape triangle = ShapeUtilities.createUpTriangle(4.00f);
-                g2D.draw(ShapeUtilities.createTranslatedShape(triangle, (int) x - 2 - 10, (int) getyTop() - 55 + offset1));
-                CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 12, (int) getyTop() - 55+2 + offset1);
+                g2D.draw(ShapeUtilities.createTranslatedShape(triangle, (int) x - 9, (int) getyTop() + 10));
+                CircleAtPlace = ShapeUtilities.createTranslatedShape(smallCircle, (int) x - 9, (int) getyTop() + 10);
                 g2D.fill(CircleAtPlace);
-
+                g2D.drawString("mWC", (int) x - 14, (int) getyTop() + 20);
 
                 break;
         }
@@ -162,10 +164,10 @@ public class RangeAxis extends Axis {
             float dbl = (float) ((yBottom - yIter) / tScale);
             //String tickString=Integer.toString((int)((yBottom-yIter)/tScale));
             String s = String.format("%,.1f", dbl);
-            g2.drawString(s, (int) xPos - fm.stringWidth(s) - 5, (int) yIter);
+            g2.drawString(s, (int) xPos - fm.stringWidth(s) - 1, (int) yIter);
             //tick mark length;
-            double tml =5;
-            g2.draw(new Line2D.Double(xPos,yIter,xPos+tml,yIter));
+            double tml = 5;
+            g2.draw(new Line2D.Double(xPos, yIter, xPos + tml, yIter));
             yIter = yIter + increment;
         }
     }

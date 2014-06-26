@@ -17,10 +17,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
+import jxl.format.Border;
 
 /*
  * To change this template, choose Tools | Templates
@@ -58,7 +60,7 @@ public class ModifiedPrintUtility implements Printable {
     public void print() {
         PrinterJob printJob = PrinterJob.getPrinterJob();
         PrinterJob pj = PrinterJob.getPrinterJob();
-        File file = new File("resources\\myPFValues.pf");
+        File file = new File("resources//myPFValues.pf");
         PageFormat pf = pj.defaultPage();
         try {
 
@@ -154,7 +156,9 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             componentToBePrinted = gPanel;
         } else {
             ReportPanel rPanel = new ReportPanel(entryPanel,true);
+            
             rPanel.setBounds(imX, imY, prnW, prnH);
+            rPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
             rPanel.setBackground(Color.white);
             f.getContentPane().setBackground(Color.white);
             f.getContentPane().add(rPanel);
@@ -191,11 +195,12 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             return (NO_SUCH_PAGE);
         } else {
             Graphics2D g2d = (Graphics2D) g;
+             g2d.drawLine(0, 0, 400,500);
             g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
             disableDoubleBuffering(componentToBePrinted);
             componentToBePrinted.paint(g2d);
-
+             
             enableDoubleBuffering(componentToBePrinted);
             return (PAGE_EXISTS);
         }

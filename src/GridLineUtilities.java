@@ -64,14 +64,14 @@ public class GridLineUtilities {
         horizontalLinePosition = yBottom;
         if (type == GridLinesType.NARROW_GRID_SPACING) {
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 50; i++) {
                 Line2D horizontalLine = new Line2D.Double(xLeft, horizontalLinePosition, xRight, horizontalLinePosition);
                 Line2D verticalLine = new Line2D.Double(verticalLinePosition, yTop, verticalLinePosition, yBottom);
                 if (!(i == 0)) //Don't draw over left  side and bottom axis;
                 {
-                    if (i % 5 == 0) {
-                        lineColor=Color.orange;
-                    }
+                  //  if (i % 5 == 0) {
+                    //    lineColor=Color.orange;
+                   // }
                     if (i % 10 == 0) {
                         lineColor=Color.lightGray;
                     }
@@ -81,8 +81,8 @@ public class GridLineUtilities {
                     //g2D.draw(verticalLine);
                     lineColor=Color.lightGray;
                 }
-                horizontalLinePosition = horizontalLinePosition - verticalSpacing / 10.0;
-                verticalLinePosition = verticalLinePosition + horizontalSpacing / 10.0;
+                horizontalLinePosition = horizontalLinePosition - verticalSpacing / 5.0;
+                verticalLinePosition = verticalLinePosition + horizontalSpacing / 5.0;
             }
             return;
         }

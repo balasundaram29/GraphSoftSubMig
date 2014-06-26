@@ -76,7 +76,9 @@ public final class ReportPanel extends JPanel {
                 "[grow][grow][grow][grow]", "[][][][][][][][grow][]20[]20"));
         this.addDeclaredValues();
         this.getAndAddTable(data);
-        this.add(new GraphPanel(this), "grow,span");
+        GraphPanel gp=new GraphPanel(this);
+        gp.getGraph().getPlot().setGridLinesType(GridLinesType.NARROW_GRID_SPACING);
+        this.add(gp, "grow,span");
         this.addSignature();
     }
 
