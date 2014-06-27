@@ -14,6 +14,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -77,7 +78,13 @@ public final class ReportPanel extends JPanel {
         this.addDeclaredValues();
         this.getAndAddTable(data);
         GraphPanel gp=new GraphPanel(this);
-        gp.getGraph().getPlot().setGridLinesType(GridLinesType.NARROW_GRID_SPACING);
+        gp.getGraph().getPlot().setGridLinesType(GridLinesType.SQUARE_GRID_SPACING);
+        gp.getGraph().getPlot().domainAxis.setAxisLineColor(Color.black);
+        List l=gp.getGraph().getPlot().getRangeAxesList();
+        for (Object r : l){
+            RangeAxis axis=(RangeAxis)r;
+            axis.setAxisLinePaint(Color.black);
+        }
         this.add(gp, "grow,span");
         this.addSignature();
     }

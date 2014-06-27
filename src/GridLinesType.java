@@ -5,16 +5,16 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class GridLinesType
-{
+public class GridLinesType {
+
     String name;
-    
-    public static GridLinesType  NO_GRID_NEEDED =    new GridLinesType("No Grid Needed");
-    public static GridLinesType  WIDE_GRID_SPACING = new GridLinesType("High Grid Spacing");
-    public static GridLinesType  MEDIUM_GRID_SPACING=new GridLinesType("Medium Grid Spacing");
-    public static GridLinesType  NARROW_GRID_SPACING  = new GridLinesType("Low Grid Spacing");
-    private GridLinesType(String name)
-    {
+    public static GridLinesType NO_GRID_NEEDED = new GridLinesType("No Grid Needed");
+    public static GridLinesType WIDE_GRID_SPACING = new GridLinesType("High Grid Spacing");
+    public static GridLinesType MEDIUM_GRID_SPACING = new GridLinesType("Medium Grid Spacing");
+    public static GridLinesType NARROW_GRID_SPACING = new GridLinesType("Low Grid Spacing");
+    public static GridLinesType SQUARE_GRID_SPACING = new GridLinesType("Square Grid Spacing");
+
+    private GridLinesType(String name) {
         this.name = name;
     }
 
@@ -24,14 +24,15 @@ public class GridLinesType
      * @param  y   a sample parameter for a method
      * @return     the sum of x and y 
      */
-   public boolean equals(Object obj)
-    {
-        if(obj==this)
-            {return true;}
-        else if( ! (obj instanceof GridLinesType))
-            {return false;}
-        if (!((this.name).equals(((GridLinesType)obj).name)))
-            {return false;} 
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (!(obj instanceof GridLinesType)) {
+            return false;
+        }
+        if (!((this.name).equals(((GridLinesType) obj).name))) {
+            return false;
+        }
         return true;
-    }    
+    }
 }

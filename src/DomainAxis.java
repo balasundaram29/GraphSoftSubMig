@@ -16,7 +16,7 @@ public class DomainAxis extends Axis {
     private AxisPosition axisPosition;
     private Dataset dataset;
     private Color DEFAULT_AXIS_LINE_COLOR = Color.black;
-    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 10);
+    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 5);
     private Font font;
     private ScaleSelectionMode DEFAULT_SCALE_MODE = ScaleSelectionMode.CALCULATE_FROM_DATASET;
     Color axisLineColor;
@@ -111,7 +111,7 @@ public class DomainAxis extends Axis {
         double xIter = dataArea.getMaxX();//xRight;
         double yPos;
         yPos = y + 10.0;
-        double increment = dataArea.getWidth()/10.0;//(xRight - xLeft) / 10.0;
+        double increment = dataArea.getWidth()/20.0;//(xRight - xLeft) / 10.0;
         g2.setPaint(axisLineColor);
         g2.setFont(font);
 
@@ -120,7 +120,7 @@ public class DomainAxis extends Axis {
                 float val = (float) ((xIter - dataArea.getMinX()) / tScale);//(float) ((xIter - xLeft) / tScale);
                 String s = String.format("%,.2f", val);
                 String tickString = Integer.toString((int) ((xIter - xLeft) / tScale));
-                g2.drawString(s, (int) xIter, (int) yPos);
+                g2.drawString(s, (int) xIter-5, (int) yPos);
                // xIter -= increment;
 
                 FontMetrics fm = g2.getFontMetrics();

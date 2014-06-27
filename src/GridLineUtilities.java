@@ -86,13 +86,56 @@ public class GridLineUtilities {
             }
             return;
         }
+          if (type == GridLinesType.SQUARE_GRID_SPACING) {
+
+            for (int i = 0; i < 20; i++) {
+                Line2D horizontalLine = new Line2D.Double(xLeft, horizontalLinePosition, xRight, horizontalLinePosition);
+                Line2D verticalLine = new Line2D.Double(verticalLinePosition, yTop, verticalLinePosition, yBottom);
+                if (!(i == 0)) //Don't draw over left  side and bottom axis;
+                {
+                  //  if (i % 5 == 0) {
+                    //    lineColor=Color.orange;
+                   // }
+                    if (i % 10 == 0) {
+                        lineColor=Color.lightGray;
+                    }
+                    drawHorizontalLine(g2D, dataArea, horizontalLinePosition, lineColor);
+                      double cur=   horizontalLinePosition;
+                      double inc1= verticalSpacing / 10.0;
+                      double inc2=
+                    for (int j=0;j<5;j++){
+
+                            if (j==0){
+                                drawHorizontalTick(g2D, dataArea, cur, Color.black, 5);
+                            }else{
+                              drawHorizontalTick(g2D, dataArea, cur, Color.black, 2);
+                            }
+                       cur=cur+inc1;
+                    }
+                        drawVerticalLine(g2D, dataArea, verticalLinePosition, lineColor);
+                         verticalLinePosition = verticalLinePosition + horizontalSpacing /4.0 ;
+                           drawVerticalLine(g2D, dataArea, verticalLinePosition, lineColor);
+                    //g2D.draw(horizontalLine);
+                    //g2D.draw(verticalLine);
+                    lineColor=Color.lightGray;
+                }
+                horizontalLinePosition = horizontalLinePosition - verticalSpacing / 2.0;
+                verticalLinePosition = verticalLinePosition + horizontalSpacing /4.0 ;
+            }
+               drawVerticalLine(g2D, dataArea, verticalLinePosition, lineColor);
+            return;
+        }
     }
 
     public static void drawHorizontalLine(Graphics2D g2D, Rectangle2D dataArea, double cursor, Color lineColor) {
         g2D.setColor(lineColor);
         g2D.draw(new Line2D.Double(dataArea.getMinX(), cursor, dataArea.getMaxX(), cursor));
     }
-
+public static void drawHorizontalTick(Graphics2D g2D, Rectangle2D dataArea, double cursor, Color lineColor,int length) {
+        g2D.setColor(lineColor);
+        g2D.draw(new Line2D.Double(dataArea.getMinX(), cursor, dataArea.getMinX()+length
+                , cursor));
+    }
     public static void drawVerticalLine(Graphics2D g2D, Rectangle2D dataArea, double cursor, Color lineColor) {
         g2D.setColor(lineColor);
         g2D.draw(new Line2D.Double(cursor, dataArea.getMinY(), cursor, dataArea.getMaxY()));
