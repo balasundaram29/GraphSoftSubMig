@@ -58,7 +58,12 @@ public class ModifiedPrintUtility implements Printable {
         rect = gPanel.getBounds();
         // gPanel.set
     }
+  public ModifiedPrintUtility(ReadingEntryPanel entryPanel,GraphPanel gp,ComponentToBePrintedType type) {
+        this.entryPanel = entryPanel;
+        this.gPanel=gp;
+        this.type = type;
 
+    }
     public void print() {
         PrinterJob printJob = PrinterJob.getPrinterJob();
         PrinterJob pj = PrinterJob.getPrinterJob();
@@ -147,9 +152,24 @@ public class ModifiedPrintUtility implements Printable {
             f.setVisible(true);
             f.getContentPane().getGraphics().clipRect(imX + 100, imY + 50, prnW, prnH);
             componentToBePrinted = gPanel;
-        } else {
+        } else if (type == ComponentToBePrintedType.ECONOMY_REPORT) {
             ReportPanel rPanel = new ReportPanel(entryPanel, true);
-
+          if (gPanel!=null){
+              GridLinesType grid=gPanel.getGraph().getPlot().getGridLinesType();
+            rPanel.getGp().getGraph().getPlot().setGridLinesType(grid);
+            }
+            rPanel.setBounds(imX, imY, prnW, prnH);
+            rPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+            rPanel.setBackground(Color.white);
+            //f.getContentPane().setBackground(Color.white);
+            f.getContentPane().add(rPanel);
+            //f.setContentPane(rPanel);
+            f.setVisible(true);
+            componentToBePrinted = rPanel;
+        } else{
+              ReportPanel rPanel = new ReportPanel(entryPanel);
+          //  GridLinesType grid=gPanel.getGraph().getPlot().getGridLinesType();
+            //rPanel.getGp().getGraph().getPlot().setGridLinesType(grid);
             rPanel.setBounds(imX, imY, prnW, prnH);
             rPanel.setBorder(BorderFactory.createLineBorder(Color.black));
             rPanel.setBackground(Color.white);

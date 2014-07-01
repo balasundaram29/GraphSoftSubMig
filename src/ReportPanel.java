@@ -54,6 +54,9 @@ public final class ReportPanel extends JPanel {
     private ReadingEntryPanel entryPanel;
     int reportTableHeight;
     double[] multFactors;
+    //used for economy print ReportPanel;
+    //public ReportPanel(ReadingEntryPanel entryPanel, boolean everythingInAPage) constructor
+    private GraphPanel gp;
 
     public ReportPanel(ReadingEntryPanel entryPanel) {
         this.entryPanel = entryPanel;
@@ -81,8 +84,9 @@ public final class ReportPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         this.addDeclaredValues();
         this.getAndAddTable(data);
-        GraphPanel gp = new GraphPanel(this);
-        gp.getGraph().getPlot().setGridLinesType(GridLinesType.SQUARE_GRID_SPACING);
+      //  GraphPanel;
+                gp = new GraphPanel(this);
+       // gp.getGraph().getPlot().setGridLinesType(GridLinesType.NARROW_GRID_SPACING);
         gp.getGraph().getPlot().domainAxis.setAxisLineColor(Color.black);
         List l = gp.getGraph().getPlot().getRangeAxesList();
         for (Object r : l) {
@@ -219,7 +223,7 @@ public final class ReportPanel extends JPanel {
             reportTable.getColumnModel().getColumn(col)
                     .setHeaderRenderer(new MyHeaderRenderer(Color.black));
         }
-        reportTable.setBorder(BorderFactory.createLineBorder(Color.black));
+        //reportTable.setBorder(BorderFactory.createLineBorder(Color.black));
 
         reportTable.setBackground(Color.white);
         reportTable.setRowHeight(17);
@@ -719,13 +723,20 @@ public final class ReportPanel extends JPanel {
                 "Enter only  numbers as values and ensure that no two discharge values are equal.");
         return;
     }
+
+    /**
+     * @return the gp
+     */
+    public GraphPanel getGp() {
+        return gp;
+    }
 }
 
 class MyHeaderRenderer extends JLabel implements
         TableCellRenderer, Serializable {
 
     public MyHeaderRenderer(Color gridColorIn) {
-        this.setBorder(BorderFactory.createLineBorder(gridColorIn));
+        this.setBorder(BorderFactory.createLineBorder(gridColorIn,1));
         this.setFont(new Font("SansSerif", Font.PLAIN, 8));
     }
 

@@ -8,6 +8,6 @@
  * @author bala
  */
 public enum ComponentToBePrintedType {
-     GRAPH,REPORT
+     GRAPH,REPORT,ECONOMY_REPORT
 
 }

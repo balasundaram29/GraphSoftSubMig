@@ -53,7 +53,7 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
 
     private ReadingEntryPanel entryPanel;
     private GraphPanel graphPanel;
-   // private final int w, h;
+    // private final int w, h;
     private File openFile;
     private String baseTitle = " Annai : Graph Software - Openwell Submersible Pumpsets";
     private JToolBar toolBar;
@@ -76,6 +76,7 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
     final Action medGridAction = new MedGridAction("Medium GridSpacing", new ImageIcon("resources//MedGrid24.gif"), "Change Grid Spacing to Medium");
     final Action narrowGridAction = new NarrowGridAction("Narrow GridSpacing", new ImageIcon("resources//NarrowGrid24.gif"), "Change Grid Spacing to Narrow");
     final Action excelReportAction = new ExcelReportAction("View the excel report", new ImageIcon("resources//Report24.gif"), "View the excel report");//;"Narrow GridSpacing", new ImageIcon("resources//NarrowGrid24.gif"), "Change Grid Spacing to Narrow");
+    final Action economyReportAction = new PrintReportAction("Print everything in single page", new ImageIcon("resources//Print24.gif"), "Preview and print everything in single page report");
     final Action exitAction = new ExitAction("Exit", null, "");
     final Action enterTypeDBAction = new EnterTypeDBAction("Enter a Pump Type", new ImageIcon("resources//Graph24.png"), "Enter a Pump Type");
     //Action for viewing ,eding and saving edited type values to DB
@@ -89,10 +90,7 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
     final JSlider smooth = new JSlider(0, 100, 0);
     final JSlider rough = new JSlider(0, 50, 0);
 
-   
-    
-    public OpeningFrame() 
-    {
+    public OpeningFrame() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle(baseTitle);
         this.entryPanel = new ReadingEntryPanel();
@@ -275,7 +273,7 @@ public final class OpeningFrame extends JFrame implements DocumentListener, Wind
         menuBar.add(otherMenu);
         setJMenuBar(menuBar);
 //if (1==1)return;
-toolBar = new JToolBar();
+        toolBar = new JToolBar();
         //toolBar.setBackground(Color.CYAN);
         toolBar.add(newFileButton);
         toolBar.add(newButton);
@@ -297,6 +295,7 @@ toolBar = new JToolBar();
         toolBar.add(medGridButton);
         toolBar.add(narrowGridButton);
         toolBar.add(excelReportButton);
+        toolBar.add(economyReportAction);
         toolBar.add(enterTypeDBButton);
         toolBar.add(viewTypeDBButton);
         toolBar.add(saveObsValuesButton);
@@ -704,20 +703,16 @@ toolBar = new JToolBar();
 
         public void actionPerformed(ActionEvent ae) {
 
-try {
+            try {
+                System.out.println("INSIDE XCEL PRINT");
 
                 new ModifiedPrintUtility(entryPanel, ComponentToBePrintedType.REPORT).print();
             } catch (Exception ex) {
             }
         }
-         //   ReportPanel rp = new ReportPanel(entryPanel, w, h);
-           // rp.generateExcelReport(graphPanel);
-
-
-
-
-        }
-    
+        //   ReportPanel rp = new ReportPanel(entryPanel, w, h);
+        // rp.generateExcelReport(graphPanel);
+    }
 
     class ViewGraphAction extends AbstractAction {
 
@@ -860,6 +855,22 @@ try {
         }
     }
 
+     class PrintEconomyReportAction extends AbstractAction {
+
+        public PrintEconomyReportAction(String text, ImageIcon icon, String desc) {
+            super(text, icon);
+            putValue(SHORT_DESCRIPTION, desc);
+
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            try {
+
+                new ModifiedPrintUtility(entryPanel,graphPanel, ComponentToBePrintedType.ECONOMY_REPORT).print();
+            } catch (Exception ex) {
+            }
+        }
+    }
     class EntryScreenAction extends AbstractAction {
 
         public EntryScreenAction(String text, ImageIcon icon, String desc) {
