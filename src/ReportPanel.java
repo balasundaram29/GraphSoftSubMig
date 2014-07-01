@@ -2,8 +2,10 @@
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -11,6 +13,7 @@ import java.awt.Robot;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,19 +76,20 @@ public final class ReportPanel extends JPanel {
         double[][] given = parseEntryTable();
         multFactors = calculateMultFactors();
         double[][] data = this.findReportValues(given);
-        setLayout(new MigLayout("",
-                "[grow][grow][grow][grow]", "[][][][][][][][grow][]20[]20"));
+        setLayout(new MigLayout("insets 0 0 0 0",
+                "[grow][grow][grow][grow]", "[][][][][][][][grow][bottom]20[bottom]"));
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         this.addDeclaredValues();
         this.getAndAddTable(data);
-        GraphPanel gp=new GraphPanel(this);
+        GraphPanel gp = new GraphPanel(this);
         gp.getGraph().getPlot().setGridLinesType(GridLinesType.SQUARE_GRID_SPACING);
         gp.getGraph().getPlot().domainAxis.setAxisLineColor(Color.black);
-        List l=gp.getGraph().getPlot().getRangeAxesList();
-        for (Object r : l){
-            RangeAxis axis=(RangeAxis)r;
+        List l = gp.getGraph().getPlot().getRangeAxesList();
+        for (Object r : l) {
+            RangeAxis axis = (RangeAxis) r;
             axis.setAxisLinePaint(Color.black);
         }
-        this.add(gp, "grow,span");
+        this.add(gp, "grow,span,wrap");//,gapright 10px");//,height 400:420:440
         this.addSignature();
     }
 
@@ -208,20 +212,33 @@ public final class ReportPanel extends JPanel {
         }
         JTable reportTable = new JTable(dataObj, columnNames);
         TableCellRenderer rendererFromHeader = reportTable.getTableHeader().getDefaultRenderer();
+
         JLabel headerLabel = (JLabel) rendererFromHeader;
-        headerLabel.setHorizontalAlignment(JLabel.LEFT); // Here you can set the alignment you want.
+        headerLabel.setHorizontalAlignment(JLabel.LEFT); // Here you can set the alignment you want
+        for (int col = 0; col < reportTable.getColumnCount(); col++) {
+            reportTable.getColumnModel().getColumn(col)
+                    .setHeaderRenderer(new MyHeaderRenderer(Color.black));
+        }
+        reportTable.setBorder(BorderFactory.createLineBorder(Color.black));
+
         reportTable.setBackground(Color.white);
         reportTable.setRowHeight(17);
         reportTable.setRowMargin(3);
-        reportTable.getTableHeader().setPreferredSize(new Dimension(reportTable.getColumnModel().getTotalColumnWidth(), 40));
+        reportTable.setGridColor(Color.black);
+
+        //reportTable.getTableHeader().setPreferredSize(new Dimension(reportTable.getColumnModel().getTotalColumnWidth(), 40));
+        reportTable.getTableHeader().setPreferredSize(new Dimension(getWidth(), 40));
         reportTable.getTableHeader().setFont(new Font("SansSerif", Font.PLAIN, 8));
         reportTable.getTableHeader().setBackground(Color.white);
+        FontMetrics fm = reportTable.getFontMetrics(new Font("SansSerif", Font.PLAIN, 8));
         reportTable.setFont(new Font("SansSerif", Font.PLAIN, 8));
+        reportTable.getColumnModel().getColumn(ReportTableConstants.DGR_COL_INDEX).setMinWidth(fm.stringWidth(("Del. Gauge")));
+        reportTable.setGridColor(Color.black);
         JScrollPane tScroller = new JScrollPane(reportTable);
         reportTable.setFillsViewportHeight(true);
         reportTable.setPreferredScrollableViewportSize(new Dimension(getWidth(),//reportTable.getHeight()+
                 reportTable.getRowCount() * (reportTable.getRowHeight())));
-        add(tScroller, "grow,span,wrap");
+        add(tScroller, "grow,span,wrap");//,gapright 10px");
     }
 
     public void generateExcelReport(GraphPanel gp) {
@@ -689,9 +706,8 @@ public final class ReportPanel extends JPanel {
         lFont = new Font("SansSerif", Font.BOLD, 8);
         compLabel = new JLabel("Signature");// 2, 45); 
         compLabel.setFont(lFont);
-        add(compLabel, "grow,wrap,span");
+        add(compLabel, "grow,wrap,span,gapbottom 10px");
     }
-
 
     public static void showErrorMessage() {
         JFrame f = new JFrame();
@@ -702,5 +718,21 @@ public final class ReportPanel extends JPanel {
         JOptionPane.showMessageDialog(f,
                 "Enter only  numbers as values and ensure that no two discharge values are equal.");
         return;
+    }
+}
+
+class MyHeaderRenderer extends JLabel implements
+        TableCellRenderer, Serializable {
+
+    public MyHeaderRenderer(Color gridColorIn) {
+        this.setBorder(BorderFactory.createLineBorder(gridColorIn));
+        this.setFont(new Font("SansSerif", Font.PLAIN, 8));
+    }
+
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+        this.setText(value.toString());
+        return this;
     }
 }

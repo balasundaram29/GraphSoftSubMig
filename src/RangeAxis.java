@@ -20,7 +20,7 @@ public class RangeAxis extends Axis {
     private ScaleSelectionMode DEFAULT_SCALE_MODE = ScaleSelectionMode.CALCULATE_FROM_DATASET;
     private Paint axisLinePaint;
     private Font font;
-    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 5);
+    private Font DEFAULT_FONT = new Font("SansSerif", Font.BOLD, 5);
     private Stroke stroke;
     private Stroke DEFAULT_AXIS_LINE_STROKE = new BasicStroke(1.5f);
     private double maxAxisValue;

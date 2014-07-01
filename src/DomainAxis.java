@@ -16,7 +16,7 @@ public class DomainAxis extends Axis {
     private AxisPosition axisPosition;
     private Dataset dataset;
     private Color DEFAULT_AXIS_LINE_COLOR = Color.black;
-    private Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 5);
+    private Font DEFAULT_FONT = new Font("SansSerif", Font.BOLD, 5);
     private Font font;
     private ScaleSelectionMode DEFAULT_SCALE_MODE = ScaleSelectionMode.CALCULATE_FROM_DATASET;
     Color axisLineColor;
@@ -135,7 +135,7 @@ public class DomainAxis extends Axis {
     public void drawAxis(Graphics2D gc) {
         gc.setColor(axisLineColor);
         gc.draw(new Line2D.Double(xLeft, y, xRight, y));
-        gc.drawPolygon(new Polygon(new int[]{(int) xRight - 20, (int) xRight, (int) xRight - 20}, new int[]{(int) y - 3, (int) y, (int) y + 3}, 3));
+       // gc.drawPolygon(new Polygon(new int[]{(int) xRight - 20, (int) xRight, (int) xRight - 20}, new int[]{(int) y - 3, (int) y, (int) y + 3}, 3));
     }
 
     /**

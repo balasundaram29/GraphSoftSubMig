@@ -63,7 +63,10 @@ public class Plot {
         Rectangle2D dataArea = drawAxesAndGetDataArea(gc, plotArea);
 
         GridLineUtilities.drawGridLines(this, gc, dataArea, gridLinesType);
-        gc.setColor(Color.blue);
+      for( Renderer renderer :getRendererList()){
+            renderer.setCurvePaint(renderer.getDataset().getRangeAxis().getAxisLinePaint());
+        }
+        gc.setColor(Color.black);
         domainAxis.drawTickMarks(gc, dataArea);
         for (RangeAxis rangeAxis : rangeAxesList) //{
         {

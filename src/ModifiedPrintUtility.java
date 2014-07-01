@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import jxl.format.Border;
+import net.miginfocom.swing.MigLayout;
 
 /*
  * To change this template, choose Tools | Templates
@@ -40,7 +41,8 @@ public class ModifiedPrintUtility implements Printable {
     GraphPanel gPanel;
     int originalW, originalH;
     Rectangle rect;
- Container frame ;
+    Container frame;
+
     public ModifiedPrintUtility(ReadingEntryPanel entryPanel, ComponentToBePrintedType type) {
         this.entryPanel = entryPanel;
         this.type = type;
@@ -49,12 +51,12 @@ public class ModifiedPrintUtility implements Printable {
 
     public ModifiedPrintUtility(GraphPanel gPanel, ComponentToBePrintedType type) {
         this.gPanel = gPanel;
-         frame =(Container) gPanel.getParent();
+        frame = (Container) gPanel.getParent();
         this.type = type;
         originalW = gPanel.getW();
         originalH = gPanel.getH();
-        rect =gPanel.getBounds();
-       // gPanel.set
+        rect = gPanel.getBounds();
+        // gPanel.set
     }
 
     public void print() {
@@ -84,15 +86,9 @@ public class ModifiedPrintUtility implements Printable {
             // ex.printStackTrace();
         }
 
-
-
-
-
-
         PageFormat pageFormat = pj.pageDialog(pf);
 
         // PageFormat pageFormat = pj.pageDialog(pj.defaultPage());
-
         int paperWidth = (int) pageFormat.getWidth();
         int paperHeight = (int) pageFormat.getHeight();
         int prnW = (int) pageFormat.getImageableWidth();
@@ -110,18 +106,17 @@ public class ModifiedPrintUtility implements Printable {
                 pageFormat.getPaper().getImageableWidth(), pageFormat.getPaper().getImageableHeight());
         try {
 
-
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
             os.writeObject(values);
         } catch (Exception ex) {
             // System.out.println("Could not write file");
         }
 
-
         JFrame f = new JFrame("Print Preview");
-f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         f.setSize(paperWidth, paperHeight + 8);
-       // f.setLayout(null);
+        f.setLayout(null);
+       // f.setLayout(new MigLayout("insets 0 0 0 0","",""));
         f.setBackground(Color.white);
         if (type == ComponentToBePrintedType.GRAPH) {
             // GraphPanel gPanel = new GraphPanel(new ReportPanel(entryPanel, prnW, prnH), prnW, prnH);
@@ -131,8 +126,8 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             //gPanel.getGraph().getPlot().setGridLinesType(gridType);
 
             //change size for printing
-            gPanel.setSize(prnW,prnH);
-           // gPanel.setWAndH(prnW, prnH);
+            gPanel.setSize(prnW, prnH);
+            // gPanel.setWAndH(prnW, prnH);
             for (Renderer renderer : gPanel.getGraph().getPlot().getRendererList()) {
                 // ((LoessSmoothRenderer) renderer).getLoessFunction().setBandwidth(entryPanel.getDesiredSmoothnessPercentage());
                 renderer.setCurvePaint(Color.black);
@@ -140,12 +135,10 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             for (RangeAxis axis : gPanel.getGraph().getPlot().getRangeAxesList()) {
                 axis.setAxisLinePaint(Color.black);
 
-
             }
             gPanel.getGraph().getPlot().getDomainAxis().setAxisLineColor(Color.black);
 
             gPanel.setBounds(imX, imY, prnW, prnH);
-
 
             gPanel.setBackground(Color.white);
 
@@ -155,13 +148,14 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             f.getContentPane().getGraphics().clipRect(imX + 100, imY + 50, prnW, prnH);
             componentToBePrinted = gPanel;
         } else {
-            ReportPanel rPanel = new ReportPanel(entryPanel,true);
-            
+            ReportPanel rPanel = new ReportPanel(entryPanel, true);
+
             rPanel.setBounds(imX, imY, prnW, prnH);
-            rPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+            rPanel.setBorder(BorderFactory.createLineBorder(Color.black));
             rPanel.setBackground(Color.white);
-            f.getContentPane().setBackground(Color.white);
+            //f.getContentPane().setBackground(Color.white);
             f.getContentPane().add(rPanel);
+            //f.setContentPane(rPanel);
             f.setVisible(true);
             componentToBePrinted = rPanel;
         }
@@ -176,16 +170,15 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         }
         f.dispose();
         //restore graphPanel to original size
-    //    gPanel.setWAndH(originalW, originalH);
-        gPanel.setSize(originalW,originalH);
+        //    gPanel.setWAndH(originalW, originalH);
+        gPanel.setSize(originalW, originalH);
         gPanel.setBounds(rect);
-       //the graph pnel has been removed from original OpeningFrame object when attaching to printable Frame.
+        //the graph pnel has been removed from original OpeningFrame object when attaching to printable Frame.
         //Now we can restore it 
-        if(type==ComponentToBePrintedType.GRAPH)
-       {
-        frame.add(gPanel);
-       
-        gPanel.repaint();
+        if (type == ComponentToBePrintedType.GRAPH) {
+            frame.add(gPanel);
+
+            gPanel.repaint();
         }
     }
 
@@ -195,12 +188,12 @@ f.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             return (NO_SUCH_PAGE);
         } else {
             Graphics2D g2d = (Graphics2D) g;
-             g2d.drawLine(0, 0, 400,500);
+            // g2d.drawLine(0, 0, 400,500);
             g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-
+          //  componentToBePrinted.setSize((int) pageFormat.getPaper().getImageableWidth(), (int) pageFormat.getPaper().getImageableHeight());
             disableDoubleBuffering(componentToBePrinted);
             componentToBePrinted.paint(g2d);
-             
+
             enableDoubleBuffering(componentToBePrinted);
             return (PAGE_EXISTS);
         }
